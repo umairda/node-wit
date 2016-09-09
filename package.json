@@ -1,7 +1,59 @@
 {
-  "name": "node-wit",
-  "version": "4.1.0",
+  "_args": [
+    [
+      "node-wit@git://github.com/umairda/node-wit.git",
+      "C:\\projects\\mean\\automabots"
+    ]
+  ],
+  "_from": "git://github.com/umairda/node-wit.git",
+  "_id": "node-wit@4.1.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/node-wit",
+  "_phantomChildren": {},
+  "_requested": {
+    "hosted": {
+      "directUrl": "https://raw.githubusercontent.com/umairda/node-wit/master/package.json",
+      "gitUrl": "git://github.com/umairda/node-wit.git",
+      "httpsUrl": "git+https://github.com/umairda/node-wit.git",
+      "shortcut": "github:umairda/node-wit",
+      "ssh": "git@github.com:umairda/node-wit.git",
+      "sshUrl": "git+ssh://git@github.com/umairda/node-wit.git",
+      "type": "github"
+    },
+    "name": "node-wit",
+    "raw": "node-wit@git://github.com/umairda/node-wit.git",
+    "rawSpec": "git://github.com/umairda/node-wit.git",
+    "scope": null,
+    "spec": "git://github.com/umairda/node-wit.git",
+    "type": "hosted"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git://github.com/umairda/node-wit.git#c0277f83e592def42bc5361df5c9ba687a95bab8",
+  "_shasum": "da1a4da3d80aa9bd6fef18715c876c7d0da0c95e",
+  "_shrinkwrap": null,
+  "_spec": "node-wit@git://github.com/umairda/node-wit.git",
+  "_where": "C:\\projects\\mean\\automabots",
+  "author": {
+    "email": "help@wit.ai",
+    "name": "The Wit Team"
+  },
+  "bugs": {
+    "url": "https://github.com/wit-ai/node-wit/issues"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "node-uuid": "^1.4.7"
+  },
   "description": "Wit.ai Node.js SDK",
+  "devDependencies": {},
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "gitHead": "c0277f83e592def42bc5361df5c9ba687a95bab8",
+  "homepage": "https://github.com/wit-ai/node-wit#readme",
   "keywords": [
     "wit",
     "wit.ai",
@@ -12,16 +64,16 @@
     "automation"
   ],
   "main": "index.js",
+  "name": "node-wit",
+  "optionalDependencies": {},
+  "readme": "# Wit Node.js SDK [![npm](https://img.shields.io/npm/v/node-wit.svg)](https://www.npmjs.com/package/node-wit)\r\n\r\n`node-wit` is the Node.js SDK for [Wit.ai](https://wit.ai).\r\n\r\n## Install\r\n\r\nIn your Node.js project, run:\r\n\r\n```bash\r\nnpm install --save node-wit\r\n```\r\n\r\n## Quickstart\r\n\r\nRun in your terminal:\r\n\r\n```bash\r\n# Node.js <= 6.x.x, add the flag --harmony_destructuring\r\nnode --harmony_destructuring examples/basic.js <MY_TOKEN>\r\n# Node.js >= v6.x.x\r\nnode examples/basic.js <MY_TOKEN>\r\n```\r\n\r\nSee `examples` folder for more examples.\r\n\r\n### Messenger integration example\r\n\r\nSee `examples/messenger.js` for a thoroughly documented tutorial.\r\n\r\n### Overview\r\n\r\nThe Wit module provides a Wit class with the following methods:\r\n* `message` - the Wit [message](https://wit.ai/docs/http/20160330#get-intent-via-text-link) API\r\n* `converse` - the low-level Wit [converse](https://wit.ai/docs/http/20160330#converse-link) API\r\n* `runActions` - a higher-level method to the Wit converse API\r\n\r\nYou can also require a library function to test out your bot in the terminal. `require('node-wit').interactive`\r\n\r\n### Wit class\r\n\r\nThe Wit constructor takes the following parameters:\r\n* `accessToken` - the access token of your Wit instance\r\n* `actions` - (optional if only using `.message()`) the object with your actions\r\n* `logger` - (optional) the object handling the logging.\r\n* `apiVersion` - (optional) the API version to use instead of the recommended one\r\n\r\nThe `actions` object has action names as properties, and action functions as values.\r\nAction implementations must return Promises (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)\r\nYou must provide at least an implementation for the special action `send`.\r\n\r\n* `send` takes 2 parameters: `request` and `response`\r\n* custom actions take 1 parameter: `request`\r\n\r\n#### Request\r\n* `sessionId` (string) - a unique identifier describing the user session\r\n* `context` (object) - the object representing the session state\r\n* `text` (string) - the text message sent by your end-user\r\n* `entities` (object) - the entities extracted by Wit's NLU\r\n\r\n#### Response\r\n* `text` (string) - The text your bot needs to send to the user (as described in your Wit.ai Stories)\r\n* `quickreplies`\r\n\r\nThe `logger` object should implement the methods `debug`, `info`, `warn` and `error`.\r\nThey can receive an arbitrary number of parameters to log.\r\nFor convenience, we provide a `Logger` class, taking a log level parameter\r\n\r\nExample:\r\n```js\r\nconst {Wit, log} = require('node-wit');\r\n\r\nconst client = new Wit({\r\n  accessToken: MY_TOKEN,\r\n  actions: {\r\n    send(request, response) {\r\n      return new Promise(function(resolve, reject) {\r\n        console.log(JSON.stringify(response));\r\n        return resolve();\r\n      });\r\n    },\r\n    myAction({sessionId, context, text, entities}) {\r\n      console.log(`Session ${sessionId} received ${text}`);\r\n      console.log(`The current context is ${JSON.stringify(context)}`);\r\n      console.log(`Wit extracted ${JSON.stringify(entities)}`);\r\n      return Promise.resolve(context);\r\n    }\r\n  },\r\n  logger: new log.Logger(log.DEBUG) // optional\r\n});\r\n```\r\n\r\n### message\r\n\r\nThe Wit [message](https://wit.ai/docs/http/20160330#get-intent-via-text-link) API.\r\n\r\nTakes the following parameters:\r\n* `message` - the text you want Wit.ai to extract the information from\r\n* `context` - (optional) the object representing the session state\r\n\r\nExample:\r\n```js\r\nconst client = new Wit({accessToken: 'MY_TOKEN'});\r\nclient.message('what is the weather in London?', {})\r\n.then((data) => {\r\n  console.log('Yay, got Wit.ai response: ' + JSON.stringify(data));\r\n})\r\n.catch(console.error);\r\n```\r\n\r\n### runActions\r\n\r\nA higher-level method to the Wit converse API.\r\n`runActions` resets the last turn on new messages and errors.\r\n\r\nTakes the following parameters:\r\n* `sessionId` - a unique identifier describing the user session\r\n* `message` - the text received from the user\r\n* `context` - the object representing the session state\r\n* `maxSteps` - (optional) the maximum number of actions to execute (defaults to 5)\r\n\r\nExample:\r\n\r\n```js\r\nconst sessionId = 'my-user-session-42';\r\nconst context0 = {};\r\nclient.runActions(sessionId, 'what is the weather in London?', context0)\r\n.then((context1) => {\r\n  console.log('The session state is now: ' + JSON.stringify(context1));\r\n  return client.runActions(sessionId, 'and in Brussels?', context1);\r\n})\r\n.then((context2) => {\r\n  console.log('The session state is now: ' + JSON.stringify(context2));\r\n})\r\n.catch((e) => {\r\n  console.log('Oops! Got an error: ' + e);\r\n});\r\n```\r\n\r\nSee `./examples/messenger.js` for a full-fledged example\r\n\r\n### converse\r\n\r\nThe low-level Wit [converse](https://wit.ai/docs/http/20160330#converse-link) API.\r\n\r\nTakes the following parameters:\r\n* `sessionId` - a unique identifier describing the user session\r\n* `message` - the text received from the user\r\n* `context` - the object representing the session state\r\n* `reset` - (optional) whether to reset the last turn\r\n\r\nExample:\r\n```js\r\nclient.converse('my-user-session-42', 'what is the weather in London?', {})\r\n.then((data) => {\r\n  console.log('Yay, got Wit.ai response: ' + JSON.stringify(data));\r\n})\r\n.catch(console.error);\r\n```\r\n\r\n### interactive\r\n\r\nStarts an interactive conversation with your bot.\r\n\r\nExample:\r\n```js\r\nconst {interactive} = require('node-wit');\r\ninteractive(client);\r\n```\r\n\r\nSee the [docs](https://wit.ai/docs) for more information.\r\n\r\n\r\n## Changing the API version\r\n\r\nOn 2016, May 11th, the /message API was updated to reflect the new Bot Engine model: intent are now entities.\r\nWe updated the SDK to the latest version: 20160516.\r\nYou can target a specific version by passing the `apiVersion` parameter when creating the `Wit` object.\r\n\r\n```json\r\n{\r\n  \"msg_id\" : \"e86468e5-b9e8-4645-95ce-b41a66fda88d\",\r\n  \"_text\" : \"hello\",\r\n  \"entities\" : {\r\n    \"intent\" : [ {\r\n      \"confidence\" : 0.9753469589149633,\r\n      \"value\" : \"greetings\"\r\n    } ]\r\n  }\r\n}\r\n```\r\n\r\nVersion prior to 20160511 will return the old format:\r\n\r\n```json\r\n{\r\n  \"msg_id\" : \"722fc79b-725c-4ca1-8029-b7f57ff88f54\",\r\n  \"_text\" : \"hello\",\r\n  \"outcomes\" : [ {\r\n    \"_text\" : \"hello\",\r\n    \"confidence\" : null,\r\n    \"intent\" : \"default_intent\",\r\n    \"entities\" : {\r\n      \"intent\" : [ {\r\n        \"confidence\" : 0.9753469589149633,\r\n        \"value\" : \"greetings\"\r\n      } ]\r\n    }\r\n  } ],\r\n  \"WARNING\" : \"DEPRECATED\"\r\n}\r\n```\r\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wit-ai/node-wit.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "https://github.com/wit-ai/node-wit",
-  "author": "The Wit Team <help@wit.ai>",
-  "dependencies": {
-    "isomorphic-fetch": "^2.2.1",
-    "node-uuid": "^1.4.7"
-  },
-  "engines": {
-    "node": ">=4.0.0"
-  }
+  "version": "4.1.0"
 }
